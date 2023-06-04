@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id               String    @id @default(uuid()) @db.Uuid
+  email            String    @unique @db.VarChar(150)
+  password         String    @unique @db.VarChar(65)
+  passwordSalt     String    @unique @db.VarChar(65)
+  role             String    @db.VarChar(10)
+  isApproved       Boolean   @default(false)
+  accessToken      String?
+  refreshToken     String?
+  createdDate      DateTime  @default(now()) @db.Timestamptz(6)
+  lastModified     DateTime  @default(now()) @db.Timestamptz(6)
+  mentor           Mentor?
+  student          Student?
+  senderMessages   Message[] @relation(name: "sender")
+  receiverMessages Message[] @relation(name: "receiver")
+  Answer           Answer[]
+}
+
+model Mentor {
+  id             String    @id @default(uuid()) @db.Uuid
+  name           String    @db.VarChar(100)
+  email          String    @unique @db.VarChar(150)
+  phone          String    @db.VarChar(15)
+  gender         String    @db.VarChar(10)
+  department     String    @db.VarChar(100)
+  academicDegree String    @db.VarChar(50)
+  office         String?   @db.VarChar(100)
+  officeHours    String?
+  facultyStatus  String    @db.VarChar(100)
+  interests      String?
+  description    String?
+  profilePicture String?
+  createdDate    DateTime  @default(now()) @db.Timestamptz(6)
+  lastModified   DateTime  @default(now()) @db.Timestamptz(6)
+  userId         String    @unique @db.Uuid
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  records        Record[]
+  students       Student[]
+}
+
+model Student {
+  id                          String    @id @default(uuid()) @db.Uuid
+  name                        String    @db.VarChar(100)
+  email                       String    @unique @db.VarChar(150)
+  phone                       String?   @db.VarChar(15)
+  gender                      String    @db.VarChar(10)
+  graduationDate              DateTime? @db.Date
+  gpa                         String?
+  institution                 String
+  fieldOfStudy                String    @db.VarChar(255)
+  hasResearch                 Boolean   @default(false)
+  isPendingMentorshipApproval Boolean   @default(false)
+  profilePicture              String?
+  createdDate                 DateTime  @default(now()) @db.Timestamptz(6)
+  lastModified                DateTime  @default(now()) @db.Timestamptz(6)
+  userId                      String    @unique @db.Uuid
+  user                        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mentorId                    String?   @db.Uuid
+  mentor                      Mentor?   @relation(fields: [mentorId], references: [id], onDelete: NoAction)
+  records                     Record[]
+}
+
+model Record {
+  id           String   @id @default(uuid()) @db.Uuid
+  title        String   @db.VarChar(255)
+  description  String?
+  stage        String?  @default("New") @db.VarChar(255)
+  createdDate  DateTime @default(now()) @db.Timestamptz(6)
+  lastModified DateTime @default(now()) @db.Timestamptz(6)
+  mentorId     String   @db.Uuid
+  mentor       Mentor   @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  studentId    String   @db.Uuid
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  note         Note?
+}
+
+model Note {
+  id           String    @id @default(uuid()) @db.Uuid
+  createdDate  DateTime  @default(now()) @db.Timestamptz(6)
+  lastModified DateTime  @default(now()) @db.Timestamptz(6)
+  recordId     String    @unique @db.Uuid
+  record       Record    @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  messages     Message[]
+}
+
+model Message {
+  id           String   @id @default(uuid()) @db.Uuid
+  message      String
+  createdDate  DateTime @default(now()) @db.Timestamptz(6)
+  lastModified DateTime @default(now()) @db.Timestamptz(6)
+  senderId     String   @db.Uuid
+  sender       User     @relation(name: "sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId   String   @db.Uuid
+  receiver     User     @relation(name: "receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  noteId       String   @db.Uuid
+  note         Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+}
+
+model Assessment {
+  id           Int        @id @default(autoincrement())
+  name         String     @db.VarChar(255)
+  description  String?
+  createdDate  DateTime   @default(now()) @db.Timestamptz(6)
+  lastModified DateTime   @default(now()) @db.Timestamptz(6)
+  questions    Question[]
+}
+
+model Question {
+  id                Int         @id @default(autoincrement())
+  question          String
+  type              String      @db.VarChar(255)
+  isDevelopmentPlan Boolean?    @default(false)
+  options           String?
+  createdDate       DateTime    @default(now()) @db.Timestamptz(6)
+  lastModified      DateTime    @default(now()) @db.Timestamptz(6)
+  assessmentId      Int?
+  assessment        Assessment? @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  answers           Answer[]
+}
+
+model Answer {
+  id           Int      @id @default(autoincrement())
+  answer       String
+  createdDate  DateTime @default(now()) @db.Timestamptz(6)
+  lastModified DateTime @default(now()) @db.Timestamptz(6)
+  userId       String   @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId   Int
+  question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
