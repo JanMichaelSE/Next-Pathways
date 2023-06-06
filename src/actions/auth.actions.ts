@@ -46,3 +46,21 @@ export async function httpLogin(userInfo: UserInfo): Promise<IResponse> {
 
   return response;
 }
+
+export async function httpForgotPassword(email: string): Promise<IResponse> {
+  const response: IResponse = {
+    hasError: false,
+    data: null,
+    errorMessage: ""
+  }
+
+  try {
+
+  } catch(error) {
+    if (error instanceof Error) {
+      console.log("Error at http forgot password:", error.message);
+    }
+  }
+
+  return response;
+}

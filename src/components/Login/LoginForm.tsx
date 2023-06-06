@@ -8,8 +8,8 @@ import Button from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 
 import { useUserStore } from "@/store/user.store";
-import { Alert, Snackbar } from "@mui/material";
-import { httpLogin } from "@/actions/login.actions";
+import { httpLogin } from "@/actions/auth.actions";
+import AlertPopup from "../UI/AlertPopup";
 
 // TODO:
 // * Create reusable components Button and Input - DONE
@@ -73,14 +73,6 @@ function LoginForm() {
     return isLessThan1135 ? "22rem" : "30rem";
   }
 
-  function handleClose(event: any, reason: string) {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
   return (
     <>
       <Formik
@@ -128,11 +120,7 @@ function LoginForm() {
           </div>
         </Form>
       </Formik>
-      <Snackbar anchorOrigin={{vertical: "top", horizontal: "center"}} open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
+      <AlertPopup type="error" open={open} setOpen={setOpen} alertMessage={alertMessage} />
     </>
   );
 }

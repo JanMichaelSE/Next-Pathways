@@ -91,6 +91,6 @@ export interface IMessage {
 
 export interface IResponse {
   hasError: boolean;
-  data?: any;
-  errorMessage?: string,
+  data: any;
+  errorMessage: string,
 }

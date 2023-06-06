@@ -16,7 +16,7 @@ interface InputProps {
   height?: string;
 }
 
-function Input({ label, imgUrl, isBlue, type, ...props }: InputProps) {
+function Input({ label, imgUrl, isBlue, ...props }: InputProps) {
   const [field, meta, helpers] = useField(props);
   const { setValue } = helpers;
 
@@ -43,7 +43,7 @@ function Input({ label, imgUrl, isBlue, type, ...props }: InputProps) {
   function formatInput(event: ChangeEvent<HTMLInputElement>) {
     const value = event.target.value;
 
-    if (type === "tel") {
+    if (props.type === "tel") {
       return setValue(phoneFormat(value));
     }
 
