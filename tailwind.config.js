@@ -12,6 +12,7 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         login: "url('/assets/login-background.svg')",
+        signup: "url('/assets/signup-background.svg')",
         "btn-gradient":
           "linear-gradient(180.71deg, #fac20b 0.61%, #ee7222 99.39%)",
       },

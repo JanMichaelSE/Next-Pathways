@@ -37,7 +37,7 @@ function LoginForm() {
 
   useEffect(() => {
     // if (role && location.state?.from) {
-      // router.push(location.state.from);
+    // router.push(location.state.from);
     if (role == "Student") {
       router.push("../student");
     } else if (role == "Mentor") {
@@ -49,15 +49,13 @@ function LoginForm() {
 
   async function handleSubmit(userInfo: UserInfo) {
 
-    if(!userInfo.email || !userInfo.password) {
+    if (!userInfo.email || !userInfo.password) {
       setOpen(true);
       setAlertMessage("Email and Password must be provided.");
       return;
     }
 
     const userResponse = await httpLogin(userInfo);
-
-    console.log("User Response from Login Form:", userResponse);
 
     if (userResponse.hasError) {
       setOpen(true);
@@ -82,11 +80,11 @@ function LoginForm() {
         }}
         validationSchema={Yup.object({
           email: Yup.string()
-          .email("Invalid email address")
-          .required("Email is required"),
+            .email("Invalid email address")
+            .required("Email is required"),
           password: Yup.string()
-          .min(12, "Must Contain 12 Characters")
-          .required("Password is required"),
+            .min(12, "Must Contain 12 Characters")
+            .required("Password is required"),
         })}
         onSubmit={async (userInfo: UserInfo) => {
           await handleSubmit(userInfo);

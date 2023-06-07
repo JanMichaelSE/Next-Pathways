@@ -61,10 +61,10 @@ function SignupPopupSelector() {
           </DialogTitle>
           <DialogContent>
             <Box className="flex justify-center pt-5">
-              <Link className="m-2 mx-5 mb-10 transition-all duration-300 transform hover:scale-110" href="/signup?role=mentor">
+              <Link className="m-2 mx-5 mb-10 transition-all duration-300 transform hover:scale-110" href="/auth/signup?role=mentor">
                 <Image src="/assets/select-mentor-logo.svg" width={300} height={200} alt="Select Mentor Icon" />
               </Link>
-              <Link className="m-2 mx-5 mb-10 transition-all duration-300 transform hover:scale-110" href="/signup?role=student">
+              <Link className="m-2 mx-5 mb-10 transition-all duration-300 transform hover:scale-110" href="/auth/signup?role=student">
                 <Image src="/assets/select-student-logo.svg" width={300} height={200} alt="Select Student Icon" />
               </Link>
             </Box>
