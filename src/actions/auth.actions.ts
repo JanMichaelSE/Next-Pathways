@@ -4,7 +4,7 @@ import { isUserAuthorized, updateUserTokens } from "@/db/models/users.model";
 import { generateAccessToken, generateRefreshToken } from "@/services/auth.service";
 import { IResponse } from "@/types";
 
- 
+
 interface UserInfo {
   email: string;
   password: string;
@@ -31,16 +31,34 @@ export async function httpLogin(userInfo: UserInfo): Promise<IResponse> {
     await updateUserTokens(userResponse.id, accessToken, refreshToken);
 
     response.data = {
-      accessToken, 
-      refreshToken, 
+      accessToken,
+      refreshToken,
       email: userResponse.email,
       role: userResponse.role,
       isApproved: userResponse.isApproved
     };
     return response;
-  } catch(error) {
+  } catch (error) {
     if (error instanceof Error) {
       console.log("Error at http login:", error.message);
+    }
+  }
+
+  return response;
+}
+
+export async function httpSignupStudent(): Promise<IResponse> {
+  const response: IResponse = {
+    hasError: false,
+    data: null,
+    errorMessage: ""
+  }
+
+  try {
+
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error at http signup student:", error.message);
     }
   }
 
@@ -56,7 +74,7 @@ export async function httpForgotPassword(email: string): Promise<IResponse> {
 
   try {
 
-  } catch(error) {
+  } catch (error) {
     if (error instanceof Error) {
       console.log("Error at http forgot password:", error.message);
     }

@@ -11,18 +11,10 @@ import { useUserStore } from "@/store/user.store";
 import { httpLogin } from "@/actions/auth.actions";
 import AlertPopup from "../UI/AlertPopup";
 
-// TODO:
-// * Create reusable components Button and Input - DONE
-// * Create Server Actions to Replace the Login request
-// * Replace Chakra Functions with Tailwind equivalent / Headless UI
-// * Replace React Router with Next Navigation
-// * See how to replace Store
-
 interface UserInfo {
   email: string;
   password: string;
 }
-
 
 function LoginForm() {
   const router = useRouter();
