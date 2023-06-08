@@ -9,19 +9,19 @@ import Button from "@/components/UI/Button";
 import Input from "@/components/UI/Input";
 import Select from "@/components/UI/Select";
 import AlertPopup from "@/components/UI/AlertPopup";
-import InputCreatable from "@/components/UI/InputCreatable/input-creatable";
+import InputCreatable from "@/components/UI/InputCreatable";
 import StudentSignUpPopup from "@/components/signup/StudentSignUpPopup";
+import { StudentInfo } from "@/types";
 
 // TODO:
-// * Need to create the Select Component
-// * Need to create the InputCreatable Component
 // * Need to create the Student Signup Up Popup
 // * Define the httpSignupStudent Server Actions 
 
 function StudentForm() {
     const setUser = useUserStore((state) => state.setUser);
     const setTokens = useUserStore((state) => state.setTokens);
-    const [open, setOpen] = useState(false);
+    const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
     const fieldOfStudyValues = [
@@ -36,25 +36,24 @@ function StudentForm() {
         "Mechanical Engineering",
     ];
 
-    async function handleSubmit(studentInfo) {
+    async function handleSubmit(studentInfo: StudentInfo) {
         const userResponse = await httpSignupStudent(studentInfo);
 
+        console.log("SIGNUP RESPONSE: ", userResponse);
+
         if (userResponse.hasError) {
-            return toast({
-                description: userResponse.errorMessage,
-                status: "error",
-                position: "top",
-                duration: 5000,
-            });
+            setAlertMessage(userResponse.errorMessage);
+            setIsAlertOpen(true);
+            return;
         }
 
         setUser(userResponse.data.email, "Student");
         setTokens(userResponse.data.accessToken, userResponse.data.refreshToken);
-        onOpen();
+        setIsConfirmationPopupOpen(true);
     }
 
     return (
-        <div className={styles.formContainer}>
+        <div className="max-w-7xl">
             <Formik
                 initialValues={{
                     firstName: "",
@@ -95,8 +94,8 @@ function StudentForm() {
                     await handleSubmit(values);
                 }}
             >
-                <Form className={styles.formContainer}>
-                    <div className={styles.formInput}>
+                <Form className="max-w-7xl">
+                    <div className="flex flex-wrap gap-6 pt-8">
                         <Input label="First Name *" name="firstName" type="text" />
                         <Input label="Last Name *" name="lastName" type="text" />
                         <Input label="Phone" name="phone" type="tel" />
@@ -116,16 +115,16 @@ function StudentForm() {
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </Select>
-                        <Input label="GPA" name="gpa" type="numeric" width={120} />
+                        <Input label="GPA" name="gpa" type="numeric" width="120px" />
                     </div>
 
-                    <div className={styles.buttonContainer}>
+                    <div className="flex justify-end mr-8">
                         <Button type="submit">Sign Up</Button>
                     </div>
                 </Form>
             </Formik>
-            <StudentSignUpPopup isOpen={isOpen} onClose={onClose} />
-            <AlertPopup type="error" open={open} setOpen={setOpen} alertMessage={alertMessage} />
+            <StudentSignUpPopup isOpen={isConfirmationPopupOpen} setIsOpen={setIsConfirmationPopupOpen} />
+            <AlertPopup type="error" open={isAlertOpen} setOpen={setIsAlertOpen} alertMessage={alertMessage} />
         </div>
     );
 }

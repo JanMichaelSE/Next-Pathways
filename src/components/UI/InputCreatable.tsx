@@ -22,7 +22,7 @@ function InputCreatable({ initOptions, label, width, isBlue, ...props }: InputCr
     return { value: option, label: option };
   });
 
-  function handleSelectChange(selectValue: ValueType<OptionTypeBase>) {
+  function handleSelectChange(selectValue: any) {
     setValue(selectValue.value);
   }
 
@@ -31,23 +31,18 @@ function InputCreatable({ initOptions, label, width, isBlue, ...props }: InputCr
     return { value: value, label: value };
   }
 
-  function labelStyles() {
-    let classNames = "label ";
+  function labelErrorStyles() {
+    return (meta.touched && meta.error) ? "text-rose-500" : "";
+  }
 
-    if (meta.touched && meta.error) {
-      classNames += " label-error";
-    }
 
-    if (isBlue) {
-      classNames += " blue-font";
-    }
-
-    return classNames;
+  function isBlueStyles() {
+    return (isBlue) ? "text-blue-500" : "";
   }
 
   return (
     <div>
-      <label htmlFor={props.id || props.name} className={labelStyles()}>
+      <label htmlFor={props.id || props.name} className={`block text-base font-bold text-gray-500 pb-1 ml-5 ${labelErrorStyles()} ${isBlueStyles()}`}>
         {label}
       </label>
       <CreatableSelect
@@ -59,10 +54,10 @@ function InputCreatable({ initOptions, label, width, isBlue, ...props }: InputCr
           ...customSelectStyles,
           valueContainer: (styles) => ({
             ...styles,
-            backgroundColor: "var(--color-white)",
+            backgroundColor: "white",
             height: "60px",
             width: width,
-            fontSize: "var(--font-size-regular)",
+            fontSize: "1rem",
             paddingLeft: "20px",
           }),
         }}
@@ -85,7 +80,7 @@ const customSelectStyles: StylesConfig<string, false> = {
   }),
   indicatorsContainer: (styles) => ({
     ...styles,
-    backgroundColor: "var(--color-white)",
+    backgroundColor: "white",
   }),
   indicatorSeparator: (styles) => ({
     ...styles,

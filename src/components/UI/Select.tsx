@@ -1,6 +1,7 @@
 "use client"
 
 import { useField, ErrorMessage } from "formik";
+import { ReactNode } from "react";
 
 interface SelectProps {
   id?: string;
@@ -8,9 +9,10 @@ interface SelectProps {
   name: string;
   placeholder?: string;
   isBlue?: boolean;
+  children?: ReactNode;
 }
 
-function Select({ label, isBlue, ...props }: SelectProps) {
+function Select({ label, isBlue, children, ...props }: SelectProps) {
   const [field, meta] = useField(props);
 
   function selectErrorStyles() {
@@ -27,10 +29,12 @@ function Select({ label, isBlue, ...props }: SelectProps) {
 
   return (
     <div>
-      <label htmlFor={props.id || props.name} className={`block text-[#5c5d60] text-2xl font-bold pb-1 ml-6 ${labelErrorStyles()} ${isBlueStyles()}`}>
+      <label htmlFor={props.id || props.name} className={`block text-base font-bold text-gray-500 pb-1 ml-5 ${labelErrorStyles()} ${isBlueStyles()}`}>
         {label}
       </label>
-      <select className={`appearance-none bg-select border border-gray-300 rounded-full py-2 px-5 h-15 w-80 shadow-md bg-no-repeat bg-right-5 bg-top-1 bg-opacity-50 text-base ${selectErrorStyles()}`} {...field} {...props} />
+      <select className={`appearance-none bg-select text-base bg-white border border-gray-400 shadow-md rounded-full px-5 h-16 w-80 transition-width duration-400 ease-in-out ${selectErrorStyles()}`} {...field} {...props}>
+        {children}
+      </select>
       <span className="block ml-5 mt-1 text-rose-500 text-sm">
         <ErrorMessage name={props.name} />
       </span>

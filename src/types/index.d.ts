@@ -16,12 +16,12 @@ export interface IStudent {
   name: string;
   phone: string;
   gender: string;
-  graduationDate: Date;
+  graduationDate?: Date;
   gpa: string;
   institution: string;
   fieldOfStudy: string;
   hasResearch?: boolean;
-  profilePicture: string;
+  profilePicture?: string;
 }
 
 export interface IMentor {
@@ -94,3 +94,17 @@ export interface IResponse {
   data: any;
   errorMessage: string,
 }
+
+interface StudentInfo {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  gender: string;
+  fieldOfStudy: string;
+  institution: string;
+  gpa: string;
+}
+

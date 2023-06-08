@@ -21,7 +21,7 @@ function Input({ label, imgUrl, isBlue, ...props }: InputProps) {
   const { setValue } = helpers;
 
   function inputHasErrorStyle() {
-     return (meta.touched && meta.error) ? "border-rose-500" : "";
+    return (meta.touched && meta.error) ? "border-rose-500" : "";
   }
 
   function inputHasImgStyle() {

@@ -18,6 +18,40 @@ async function findUserByEmail(email: string) {
   }
 }
 
+async function createUser(
+  email: string,
+  password: string,
+  role: string,
+  isApproved: boolean
+) {
+  try {
+    const existingUser = await findUserByEmail(email);
+    if (existingUser) {
+      return buildErrorObject(
+        400,
+        "Email is already taken, please provide a another email address."
+      );
+    }
+
+    let salt: string = generateSalt(32);
+    let hashedPassword: string = sha512(password, salt);
+
+    const createdUser = await prisma.user.create({
+      data: {
+        email: email,
+        password: hashedPassword,
+        passwordSalt: salt,
+        role: role,
+        isApproved: isApproved,
+      },
+    });
+
+    return createdUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function isUserAuthorized(email: string, password: string) {
   try {
     const user = await findUserByEmail(email);
@@ -34,7 +68,7 @@ async function isUserAuthorized(email: string, password: string) {
 
     return excludeFields(user, "password", "passwordSalt");
   }
-  catch(error) {
+  catch (error) {
     throw error;
   }
 }
@@ -95,6 +129,7 @@ function sha512(password: string, salt: string) {
 
 export {
   findUserByEmail,
+  createUser,
   isUserAuthorized,
   getUserTokens,
   updateUserTokens
