@@ -4,12 +4,12 @@ import { useEffect, useRef } from "react";
 import { Modal } from "flowbite";
 import Button from "../UI/Button";
 
-interface StudentSignUpPopupProps {
+interface MentorSignUpPopupProps {
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function StudentSignUpPopup({ isOpen, setIsOpen }: StudentSignUpPopupProps) {
+function MentorSignUpPopup({ isOpen, setIsOpen }: MentorSignUpPopupProps) {
     const router = useRouter();
     const modalRef = useRef(null);
 
@@ -22,7 +22,7 @@ function StudentSignUpPopup({ isOpen, setIsOpen }: StudentSignUpPopupProps) {
 
     function navigateToHome() {
         setIsOpen(false);
-        router.push("../student/assessments");
+        router.push("../mentor/records");
     }
 
     return (
@@ -42,9 +42,9 @@ function StudentSignUpPopup({ isOpen, setIsOpen }: StudentSignUpPopupProps) {
                                 <Image className="w-28 h-28" src="/assets/checkmark-icon.svg" width={112} height={112} alt="Checkmark Icon" />
                             </div>
                             <div className="text-center text-blue-600 font-bold mt-4">
-                                <h1 className="text-3xl mb-4">Your account has been created!</h1>
+                                <h1 className="text-3xl mb-4">Your account has been submitted for approval!</h1>
                                 <p className="text-2xl">
-                                    Please click continue where you'll have the opportunity to fill out an assessment.
+                                    You'll receive an email once its been verified.
                                 </p>
                             </div>
                         </div>
@@ -62,4 +62,4 @@ function StudentSignUpPopup({ isOpen, setIsOpen }: StudentSignUpPopupProps) {
     );
 }
 
-export default StudentSignUpPopup;
+export default MentorSignUpPopup;

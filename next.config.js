@@ -9,6 +9,14 @@ const nextConfig = {
         source: "/",
         destination: "/auth/login",
       },
+      {
+        source: "/student",
+        destination: "/student/assessments",
+      },
+      {
+        source: "/mentor",
+        destination: "/mentor/records",
+      },
     ];
   },
 };

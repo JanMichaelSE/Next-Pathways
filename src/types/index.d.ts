@@ -108,3 +108,17 @@ interface StudentInfo {
   gpa: string;
 }
 
+interface MentorInfo {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  gender: string;
+  academicDegree: string;
+  department: string;
+  facultyStatus: string;
+  areaOfInterest: string;
+}
+

@@ -1,9 +1,10 @@
 "use server"
 
+import { createMentor } from "@/db/models/mentors.model";
 import { createStudent } from "@/db/models/students.model";
 import { createUser, isUserAuthorized, updateUserTokens } from "@/db/models/users.model";
 import { generateAccessToken, generateRefreshToken } from "@/services/auth.service";
-import { IResponse, IStudent, IUser, StudentInfo } from "@/types";
+import { IMentor, IResponse, IStudent, IUser, MentorInfo, StudentInfo } from "@/types";
 import { phoneFormat, titleCase } from "@/utils/formatters.util";
 
 
@@ -81,7 +82,7 @@ export async function httpSignupStudent(studentInfo: StudentInfo): Promise<IResp
       !student.fieldOfStudy ||
       !student.institution
     ) {
-      response.errorMessage = "Student is missing required fields for signup.";
+      response.errorMessage = "Mentor is missing required fields for signup.";
       response.hasError = true;
       return response;
     }
@@ -107,7 +108,75 @@ export async function httpSignupStudent(studentInfo: StudentInfo): Promise<IResp
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.log("Error at http signup student:", error.message);
+      console.log("Error at http signup mentor:", error.message);
+    }
+  }
+
+  return response;
+}
+
+export async function httpSignupMentor(mentorInfo: MentorInfo): Promise<IResponse> {
+  const response: IResponse = {
+    hasError: false,
+    data: null,
+    errorMessage: ""
+  }
+
+  try {
+    const user: IUser = {
+      email: mentorInfo.email,
+      password: mentorInfo.password,
+      role: "Mentor"
+    };
+
+    const mentor: IMentor = {
+      name: titleCase(`${mentorInfo.firstName} + ${mentorInfo.lastName}`),
+      email: mentorInfo.email,
+      phone: phoneFormat(mentorInfo.phone),
+      gender: titleCase(mentorInfo.gender),
+      department: titleCase(mentorInfo.department),
+      academicDegree: titleCase(mentorInfo.academicDegree),
+      facultyStatus: titleCase(mentorInfo.facultyStatus),
+    };
+
+    if (
+      !user.email ||
+      !user.password ||
+      !user.role ||
+      !mentor.name ||
+      !mentor.gender ||
+      !mentor.phone ||
+      !mentor.department ||
+      !mentor.facultyStatus ||
+      !mentor.academicDegree
+    ) {
+      response.errorMessage = "Mentor is missing required fields for signup.";
+      response.hasError = true;
+      return response;
+    }
+
+    const userResponse = await createUser(user.email, user.password, user.role, true);
+    if ("errorCode" in userResponse) {
+      response.errorMessage = userResponse.errorMessage;
+      response.hasError = true;
+      return response;
+    }
+
+    const accessToken = generateAccessToken(userResponse.id);
+    const refreshToken = generateRefreshToken(userResponse.id);
+    await updateUserTokens(userResponse.id, accessToken, refreshToken);
+
+    const mentorResponse = await createMentor(userResponse.id, user.email, mentor);
+
+    response.data = {
+      accessToken,
+      refreshToken,
+      isApproved: true,
+      ...mentorResponse,
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log("Error at http signup mentor:", error.message);
     }
   }
 

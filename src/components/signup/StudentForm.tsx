@@ -118,7 +118,7 @@ function StudentForm() {
                         <Input label="GPA" name="gpa" type="numeric" width="120px" />
                     </div>
 
-                    <div className="flex justify-end mr-8">
+                    <div className="flex justify-end mr-16 mt-16">
                         <Button type="submit">Sign Up</Button>
                     </div>
                 </Form>
